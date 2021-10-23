@@ -1,3 +1,5 @@
+import { invokeCallback } from "./common";
+
 export class UnlCollection {
 
     #readonly = null;

@@ -1,3 +1,5 @@
+import { constants, writeAsync } from './common';
+
 const fs = require('fs');
 
 // Represents the node-party-line that can be used to communicate with unl nodes.
@@ -12,7 +14,7 @@ export class NplChannel {
 
     consume(onMessage) {
 
-        this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: MAX_SEQ_PACKET_SIZE });
+        this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
 
         // From the hotpocket when sending the npl messages first it sends the pubkey of the particular node
         // and then the message, First data buffer is taken as pubkey and the second one as message,
@@ -34,8 +36,8 @@ export class NplChannel {
 
     send(msg) {
         const buf = Buffer.from(msg);
-        if (buf.length > MAX_SEQ_PACKET_SIZE)
-            throw ("NPL message exceeds max size " + MAX_SEQ_PACKET_SIZE);
+        if (buf.length > constants.MAX_SEQ_PACKET_SIZE)
+            throw ("NPL message exceeds max size " + constants.MAX_SEQ_PACKET_SIZE);
         return writeAsync(this.#fd, buf);
     }
 

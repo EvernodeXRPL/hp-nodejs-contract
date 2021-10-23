@@ -1,6 +1,8 @@
+const fs = require('fs');
+
 export const controlMessages = {
     contractEnd: "contract_end",
-    unlChangeset: "unl_changeset"
+    peerChangeset: "peer_changeset"
 }
 Object.freeze(controlMessages);
 
@@ -10,9 +12,12 @@ export const clientProtocols = {
 }
 Object.freeze(clientProtocols);
 
-export const MAX_SEQ_PACKET_SIZE = 128 * 1024;
-export const PATCH_CONFIG_PATH = "../patch.cfg";
-export const POST_EXEC_SCRIPT_NAME = "post_exec.sh";
+export const constants = {
+    MAX_SEQ_PACKET_SIZE: 128 * 1024,
+    PATCH_CONFIG_PATH: "../patch.cfg",
+    POST_EXEC_SCRIPT_NAME: "post_exec.sh"
+}
+Object.freeze(constants);
 
 export function writeAsync(fd, buf) {
     return new Promise(resolve => fs.write(fd, buf, resolve));

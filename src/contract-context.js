@@ -1,3 +1,4 @@
+import { controlMessages } from "./common";
 import { PatchConfig } from "./patch-config";
 
 export class ContractContext {
@@ -8,6 +9,8 @@ export class ContractContext {
     constructor(hpargs, users, unl, controlChannel) {
         this.#patchConfig = new PatchConfig();
         this.#controlChannel = controlChannel;
+        this.contractId = hpargs.contract_id;
+        this.pubkey = hpargs.pubkey;
         this.readonly = hpargs.readonly;
         this.timestamp = hpargs.timestamp;
         this.users = users;
@@ -24,5 +27,14 @@ export class ContractContext {
     // Updates the config with given config object and save the patch config.
     updateConfig(config) {
         return this.#patchConfig.updateConfig(config);
+    }
+
+    // Updates the known-peers this node must attempt connections to.
+    // toAdd: Array of strings containing peers to be added. Each string must be in the format of "<ip>:<port>".
+    updatePeers(toAdd) {
+        return this.#controlChannel.send({
+            type: controlMessages.peerChangeset,
+            add: toAdd
+        });
     }
 }

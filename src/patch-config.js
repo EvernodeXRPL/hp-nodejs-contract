@@ -1,3 +1,4 @@
+import { constants } from './common';
 
 const fs = require('fs');
 
@@ -6,11 +7,11 @@ export class PatchConfig {
 
     // Loads the config value if there's a patch config file. Otherwise throw error.
     getConfig() {
-        if (!fs.existsSync(PATCH_CONFIG_PATH))
+        if (!fs.existsSync(constants.PATCH_CONFIG_PATH))
             throw "Patch config file does not exist.";
 
         return new Promise((resolve, reject) => {
-            fs.readFile(PATCH_CONFIG_PATH, 'utf8', function (err, data) {
+            fs.readFile(constants.PATCH_CONFIG_PATH, 'utf8', function (err, data) {
                 if (err) reject(err);
                 else resolve(JSON.parse(data));
             });
@@ -23,7 +24,7 @@ export class PatchConfig {
 
         return new Promise((resolve, reject) => {
             // Format json to match with the patch.cfg json format created by HP at the startup.
-            fs.writeFile(PATCH_CONFIG_PATH, JSON.stringify(config, null, 4), (err) => {
+            fs.writeFile(constants.PATCH_CONFIG_PATH, JSON.stringify(config, null, 4), (err) => {
                 if (err) reject(err);
                 else resolve();
             });
