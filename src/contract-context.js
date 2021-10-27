@@ -15,8 +15,8 @@ export class ContractContext {
         this.timestamp = hpargs.timestamp;
         this.users = users;
         this.unl = unl; // Not available in readonly mode.
-        this.lcl_seq_no = hpargs.lcl_seq_no; // Not available in readonly mode.
-        this.lcl_hash = hpargs.lcl_hash; // Not available in readonly mode.
+        this.lclSeqNo = hpargs.lcl_seq_no; // Not available in readonly mode.
+        this.lclHash = hpargs.lcl_hash; // Not available in readonly mode.
     }
 
     // Returns the config values in patch config.
