@@ -31,10 +31,11 @@ export class ContractContext {
 
     // Updates the known-peers this node must attempt connections to.
     // toAdd: Array of strings containing peers to be added. Each string must be in the format of "<ip>:<port>".
-    updatePeers(toAdd) {
+    updatePeers(toAdd, toRemove) {
         return this.#controlChannel.send({
             type: controlMessages.peerChangeset,
-            add: toAdd
+            add: toAdd || [],
+            remove: toRemove || []
         });
     }
 }
