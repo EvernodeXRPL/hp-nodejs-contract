@@ -80,17 +80,9 @@ export class UserChannel {
 
         if (Buffer.isBuffer(msg))
             return msg;
-
-        if (this.#clientProtocol == clientProtocols.bson) {
+        else if (this.#clientProtocol == clientProtocols.bson)
             return Buffer.from(msg);
-        }
-        else { // json
-
-            // In JSON, we need to ensure that the final buffer contains a string.
-            if (typeof msg === "string" || msg instanceof String)
-                return Buffer.from(msg);
-            else
-                return Buffer.from(JSON.stringify(msg));
-        }
+        else // json
+            return Buffer.from(JSON.stringify(msg));
     }
 }
