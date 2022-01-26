@@ -6,9 +6,14 @@ Hot Pocket contract library for NodeJs smart contracts.
 npm i -g @vercel/ncc
 ```
 
-### Publish to npm
+### Build
 ```
 npm install
+npm run build
+```
+
+### Publish to npm
+```
 npm login
 npm run publish
 ```
