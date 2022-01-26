@@ -12,9 +12,9 @@ export class UnlCollection {
         this.#pendingTasks = pendingTasks;
 
         if (!readonly) {
-            unl.forEach(pubKey => {
-                this.nodes[pubKey] = new UnlNode(pubKey);
-            });
+            for (const [pubKey, stat] of Object.entries(unl)) {
+                this.nodes[pubKey] = new UnlNode(pubKey, stat.active_on);
+            }
 
             this.#channel = channel;
         }
@@ -57,7 +57,8 @@ export class UnlCollection {
 // Represents a node that's part of unl.
 export class UnlNode {
 
-    constructor(pubKey) {
+    constructor(pubKey, activeOn) {
         this.pubKey = pubKey;
+        this.activeOn = activeOn;
     }
 }
