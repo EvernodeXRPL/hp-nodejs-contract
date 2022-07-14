@@ -10,7 +10,8 @@ export class ContractContext {
         this.#patchConfig = new PatchConfig();
         this.#controlChannel = controlChannel;
         this.contractId = hpargs.contract_id;
-        this.pubkey = hpargs.pubkey;
+        this.publicKey = hpargs.public_key;
+        this.privateKey = hpargs.private_key;
         this.readonly = hpargs.readonly;
         this.timestamp = hpargs.timestamp;
         this.users = users;

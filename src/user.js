@@ -8,19 +8,19 @@ export class UsersCollection {
     constructor(userInputsFd, usersObj, clientProtocol) {
         this.#infd = userInputsFd;
 
-        Object.entries(usersObj).forEach(([pubKey, arr]) => {
+        Object.entries(usersObj).forEach(([publicKey, arr]) => {
 
             const outfd = arr[0]; // First array element is the output fd.
             arr.splice(0, 1); // Remove first element (output fd). The rest are pairs of msg offset/length tuples.
 
             const channel = new UserChannel(outfd, clientProtocol);
-            this.#users[pubKey] = new User(pubKey, channel, arr);
+            this.#users[publicKey] = new User(publicKey, channel, arr);
         });
     }
 
-    // Returns the User for the specified pubkey. Returns null if not found.
-    find(pubKey) {
-        return this.#users[pubKey]
+    // Returns the User for the specified public key. Returns null if not found.
+    find(publicKey) {
+        return this.#users[publicKey]
     }
 
     // Returns all the currently connected users.
@@ -44,8 +44,8 @@ export class User {
 
     #channel = null;
 
-    constructor(pubKey, channel, inputs) {
-        this.pubKey = pubKey;
+    constructor(publicKey, channel, inputs) {
+        this.publicKey = publicKey;
         this.inputs = inputs;
         this.#channel = channel;
     }

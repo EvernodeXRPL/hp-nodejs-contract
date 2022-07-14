@@ -1,8 +1,8 @@
 {
     "name": "hotpocket-nodejs-contract",
-    "version": "0.5.3",
+    "version": "0.5.4",
     "scripts": {
         "build": "ncc build src/index.js --target es2021 -o dist && ./clean-pkg.sh",
-        "publish": "npm run build && npm publish dist"
+        "publish": "npm run build && npm publish ./dist"
     }
 }

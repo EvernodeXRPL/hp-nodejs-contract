@@ -9,7 +9,7 @@ const echoContract = async (ctx) => {
 
     for (const user of ctx.users.list()) {
 
-        // This user's hex pubkey can be accessed from 'user.pubKey'
+        // This user's hex public key can be accessed from 'user.publicKey'
 
         // For each user we add a promise to list of promises.
         userHandlers.push(new Promise(async (resolve) => {
@@ -35,18 +35,18 @@ const echoContract = async (ctx) => {
     await Promise.all(userHandlers);
 
     // Get the user identified by public key.
-    // ctx.users.find("<PubkeyHex>");
+    // ctx.users.find("<public key hex>");
 
     // Get list of all unl nodes in the cluster.
     // ctx.unl.list();
 
     // Get the unl node identified by public key.
-    // ctx.unl.find("<PubkeyHex>");
+    // ctx.unl.find("<public key hex>");
 
     // NPL messages example.
     // if (!ctx.readonly) {
     //     ctx.unl.onMessage((node, msg) => {
-    //         console.log(msg + " from " + node.pubKey);
+    //         console.log(msg + " from " + node.publicKey);
     //     })
     //     await ctx.unl.send("Hello");
     // }

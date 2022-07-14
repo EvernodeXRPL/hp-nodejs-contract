@@ -16,18 +16,18 @@ export class NplChannel {
 
         this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
 
-        // From the hotpocket when sending the npl messages first it sends the pubkey of the particular node
-        // and then the message, First data buffer is taken as pubkey and the second one as message,
+        // From the hotpocket when sending the npl messages first it sends the public key of the particular node
+        // and then the message, First data buffer is taken as public key and the second one as message,
         // then npl message object is constructed and the event is emmited.
-        let pubKey = null;
+        let publicKey = null;
 
         this.#readStream.on("data", (data) => {
-            if (!pubKey) {
-                pubKey = data.toString();
+            if (!publicKey) {
+                publicKey = data.toString();
             }
             else {
-                onMessage(pubKey, data);
-                pubKey = null;
+                onMessage(publicKey, data);
+                publicKey = null;
             }
         });
 

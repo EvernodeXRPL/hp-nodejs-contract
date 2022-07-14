@@ -12,17 +12,17 @@ export class UnlCollection {
         this.#pendingTasks = pendingTasks;
 
         if (!readonly) {
-            for (const [pubKey, stat] of Object.entries(unl)) {
-                this.nodes[pubKey] = new UnlNode(pubKey, stat.active_on);
+            for (const [publicKey, stat] of Object.entries(unl)) {
+                this.nodes[publicKey] = new UnlNode(publicKey, stat.active_on);
             }
 
             this.#channel = channel;
         }
     }
 
-    // Returns the unl node for the specified pubkey. Returns null if not found.
-    find(pubKey) {
-        return this.nodes[pubKey];
+    // Returns the unl node for the specified public key. Returns null if not found.
+    find(publicKey) {
+        return this.nodes[publicKey];
     }
 
     // Returns all the unl nodes.
@@ -40,8 +40,8 @@ export class UnlCollection {
         if (this.#readonly)
             throw "NPL messages not available in readonly mode.";
 
-        this.#channel.consume((pubKey, msg) => {
-            this.#pendingTasks.push(invokeCallback(callback, this.nodes[pubKey], msg));
+        this.#channel.consume((publicKey, msg) => {
+            this.#pendingTasks.push(invokeCallback(callback, this.nodes[publicKey], msg));
         });
     }
 
@@ -57,8 +57,8 @@ export class UnlCollection {
 // Represents a node that's part of unl.
 export class UnlNode {
 
-    constructor(pubKey, activeOn) {
-        this.pubKey = pubKey;
+    constructor(publicKey, activeOn) {
+        this.publicKey = publicKey;
         this.activeOn = activeOn;
     }
 }

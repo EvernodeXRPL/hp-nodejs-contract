@@ -37,12 +37,12 @@ export class PatchConfig {
             throw "Contract version is not specified.";
         if (!config.unl || !config.unl.length)
             throw "UNL list cannot be empty.";
-        for (let pubKey of config.unl) {
-            // Pubkeys are validated against length, ed prefix and hex characters.
-            if (!pubKey.length)
-                throw "UNL pubKey not specified.";
-            else if (!(/^(e|E)(d|D)[0-9a-fA-F]{64}$/g.test(pubKey)))
-                throw "Invalid UNL pubKey specified.";
+        for (let publicKey of config.unl) {
+            // Public keys are validated against length, ed prefix and hex characters.
+            if (!publicKey.length)
+                throw "UNL public key not specified.";
+            else if (!(/^(e|E)(d|D)[0-9a-fA-F]{64}$/g.test(publicKey)))
+                throw "Invalid UNL public key specified.";
         }
         if (!config.bin_path || !config.bin_path.length)
             throw "Binary path cannot be empty.";
