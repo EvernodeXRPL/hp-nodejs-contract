@@ -46,14 +46,16 @@ export class PatchConfig {
         }
         if (!config.bin_path || !config.bin_path.length)
             throw "Binary path cannot be empty.";
-        if (config.roundtime < 1 && config.roundtime > 3600000)
+        if (config.consensus.mode != "public" && config.consensus.mode != "private")
+            throw "Invalid consensus mode configured in patch file. Valid values: public|private";
+        if (config.consensus.roundtime < 1 && config.consensus.roundtime > 3600000)
             throw "Round time must be between 1 and 3600000ms inclusive.";
-        if (config.stage_slice < 1 || config.stage_slice > 33)
+        if (config.consensus.stage_slice < 1 || config.consensus.stage_slice > 33)
             throw "Stage slice must be between 1 and 33 percent inclusive.";
-        if (config.consensus != "public" && config.consensus != "private")
-            throw "Invalid consensus flag configured in patch file. Valid values: public|private";
-        if (config.npl != "public" && config.npl != "private")
-            throw "Invalid npl flag configured in patch file. Valid values: public|private";
+        if (config.consensus.threshold < 1 || config.consensus.threshold > 100)
+            throw "Consensus threshold must be between 1 and 100 percent inclusive.";
+        if (config.npl.mode != "public" && config.npl.mode != "private")
+            throw "Invalid npl mode configured in patch file. Valid values: public|private";
         if (config.round_limits.user_input_bytes < 0 || config.round_limits.user_output_bytes < 0 || config.round_limits.npl_output_bytes < 0 ||
             config.round_limits.proc_cpu_seconds < 0 || config.round_limits.proc_mem_bytes < 0 || config.round_limits.proc_ofd_count < 0)
             throw "Invalid round limits.";
