@@ -1,6 +1,8 @@
 import { controlMessages } from "./common";
 import { PatchConfig } from "./patch-config";
 
+// HotPocket contract context which is passed into every smart contract invocation.
+
 export class ContractContext {
 
     #patchConfig = null;

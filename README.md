@@ -1,5 +1,5 @@
-# Hot Pocket NodeJs contract library
-Hot Pocket contract library for NodeJs smart contracts.
+# HotPocket NodeJs contract library
+HotPocket contract library for NodeJs smart contracts.
 
 # Prerequisites
 ```

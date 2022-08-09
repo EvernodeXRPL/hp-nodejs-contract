@@ -25,7 +25,7 @@ export class HotPocketContract {
 
             // Check whether we are running on a console and provide error.
             if (tty.isatty(process.stdin.fd)) {
-                console.error("Error: Hot Pocket smart contracts must be executed via Hot Pocket.");
+                console.error("Error: HotPocket smart contracts must be executed via HotPocket.");
                 resolve(false);
                 return;
             }
