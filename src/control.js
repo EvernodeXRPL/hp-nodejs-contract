@@ -11,6 +11,10 @@ export class ControlChannel {
     }
 
     consume(onMessage) {
+
+        if (this.#readStream)
+            throw "Control channel already consumed.";
+
         this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
         this.#readStream.on("data", onMessage);
         this.#readStream.on("error", (err) => { });

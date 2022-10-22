@@ -45,8 +45,8 @@ const echoContract = async (ctx) => {
 
     // NPL messages example.
     // if (!ctx.readonly) {
-    //     ctx.unl.onMessage((node, msg) => {
-    //         console.log(msg + " from " + node.publicKey);
+    //     ctx.unl.onMessage((node, msg) => { // msg is a Buffer
+    //         console.log(msg.toString() + " from " + node.publicKey);
     //     })
     //     await ctx.unl.send("Hello");
     // }

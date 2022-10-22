@@ -13,6 +13,7 @@ npm run build
 ```
 
 ### Publish to npm
+First, make sure to update the version number in package.json, then run following:
 ```
 npm login
 npm run publish

@@ -14,9 +14,12 @@ export class NplChannel {
 
     consume(onMessage) {
 
+        if (this.#readStream)
+            throw "NPL channel already consumed.";
+
         this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
 
-        // From the hotpocket when sending the npl messages first it sends the public key of the particular node
+        // When hotpocket is sending the npl messages, first it sends the public key of the particular node
         // and then the message, First data buffer is taken as public key and the second one as message,
         // then npl message object is constructed and the event is emmited.
         let publicKey = null;
