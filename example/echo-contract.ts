@@ -1,18 +1,18 @@
-const HotPocket = require("hotpocket-nodejs-contract");
+import HotPocket from "../dist";
 
 // HotPocket smart contract is defined as a function which takes HotPocket Contract Context as an argument.
 // HotPocket considers execution as complete, when this function completes and all the NPL message callbacks are complete.
-const echoContract = async (ctx) => {
+const echoContract = async (ctx: HotPocket.ContractContext) => {
 
     // Collection of per-user promises to wait for. Each promise completes when inputs for that user is processed.
-    const userHandlers = [];
+    const userHandlers: any[] = [];
 
     for (const user of ctx.users.list()) {
 
         // This user's hex public key can be accessed from 'user.publicKey'
 
         // For each user we add a promise to list of promises.
-        userHandlers.push(new Promise(async (resolve) => {
+        userHandlers.push(new Promise<void>(async (resolve) => {
 
             // The contract need to ensure that all outputs for a particular user is emitted
             // in deterministic order. Hence, we are processing all inputs for each user sequentially.

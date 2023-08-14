@@ -1,14 +1,26 @@
+import { ControlChannel } from "control";
 import { controlMessages } from "./common";
-import { PatchConfig } from "./patch-config";
+import { Config, PatchConfig } from "./patch-config";
+import { UsersCollection } from "user";
+import { UnlCollection } from "unl";
 
 // HotPocket contract context which is passed into every smart contract invocation.
 
 export class ContractContext {
 
-    #patchConfig = null;
-    #controlChannel = null;
+    #patchConfig: PatchConfig;
+    #controlChannel: ControlChannel;
+    contractId: string
+    publicKey: string
+    privateKey: string
+    readonly: boolean
+    timestamp: number
+    users: UsersCollection
+    unl: UnlCollection
+    lclSeqNo: number
+    lclHash:number
 
-    constructor(hpargs, users, unl, controlChannel) {
+    constructor(hpargs: any, users: UsersCollection, unl: UnlCollection, controlChannel: ControlChannel) {
         this.#patchConfig = new PatchConfig();
         this.#controlChannel = controlChannel;
         this.contractId = hpargs.contract_id;
@@ -28,13 +40,13 @@ export class ContractContext {
     }
 
     // Updates the config with given config object and save the patch config.
-    updateConfig(config) {
+    updateConfig(config: Config) {
         return this.#patchConfig.updateConfig(config);
     }
 
     // Updates the known-peers this node must attempt connections to.
     // toAdd: Array of strings containing peers to be added. Each string must be in the format of "<ip>:<port>".
-    updatePeers(toAdd, toRemove) {
+    updatePeers(toAdd?: string[], toRemove?: string[]) {
         return this.#controlChannel.send({
             type: controlMessages.peerChangeset,
             add: toAdd || [],

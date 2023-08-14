@@ -1,26 +1,26 @@
-const fs = require('fs');
+import fs from 'fs';
 import { constants, writeAsync } from './common';
 
 export class ControlChannel {
 
-    #fd = null;
-    #readStream = null;
+    #fd: number
+    #readStream:fs.ReadStream | null = null;
 
-    constructor(fd) {
+    constructor(fd: number) {
         this.#fd = fd;
     }
 
-    consume(onMessage) {
+    consume(onMessage: (chunk: string | Buffer) => void) {
 
         if (this.#readStream)
             throw "Control channel already consumed.";
 
-        this.#readStream = fs.createReadStream(null, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
+        this.#readStream = fs.createReadStream(null as any, { fd: this.#fd, highWaterMark: constants.MAX_SEQ_PACKET_SIZE });
         this.#readStream.on("data", onMessage);
         this.#readStream.on("error", (err) => { });
     }
 
-    send(obj) {
+    send(obj: any) {
         const buf = Buffer.from(JSON.stringify(obj));
         if (buf.length > constants.MAX_SEQ_PACKET_SIZE)
             throw ("Control message exceeds max size " + constants.MAX_SEQ_PACKET_SIZE);
