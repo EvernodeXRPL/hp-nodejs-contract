@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 export const controlMessages = {
     contractEnd: "contract_end",
@@ -9,7 +9,7 @@ Object.freeze(controlMessages);
 export const clientProtocols = {
     json: "json",
     bson: "bson"
-}
+} as const
 Object.freeze(clientProtocols);
 
 export const constants = {
@@ -19,17 +19,17 @@ export const constants = {
 }
 Object.freeze(constants);
 
-export function writeAsync(fd, buf) {
+export function writeAsync(fd:number, buf:any) {
     return new Promise(resolve => fs.write(fd, buf, resolve));
 }
-export function writevAsync(fd, bufList) {
+export function writevAsync(fd: number, bufList: readonly NodeJS.ArrayBufferView[]) {
     return new Promise(resolve => fs.writev(fd, bufList, resolve));
 }
-export function readAsync(fd, buf, offset, size) {
+export function readAsync(fd: number, buf: any, offset: fs.ReadPosition | null, size:number) {
     return new Promise(resolve => fs.read(fd, buf, 0, size, offset, resolve));
 }
 
-export async function invokeCallback(callback, ...args) {
+export async function invokeCallback(callback: any, ...args:any) {
     if (!callback)
         return;
 
@@ -41,6 +41,6 @@ export async function invokeCallback(callback, ...args) {
     }
 }
 
-export function errHandler(err) {
+export function errHandler(err:any) {
     console.log(err);
 }

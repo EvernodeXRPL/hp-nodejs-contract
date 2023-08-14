@@ -8,7 +8,11 @@
     "license": "MIT",
     "version": "0.5.7",
     "scripts": {
-        "build": "ncc build src/index.js --target es2021 -o dist && ./clean-pkg.sh",
+        "build": "ncc build src/index.ts --target es2021 -o dist && ./clean-pkg.sh",
         "publish": "npm run build && cp npm-readme.md dist/README.md && npm publish ./dist"
+    },
+    "devDependencies": {
+        "@types/node": "^20.5.0",
+        "typescript": "^5.1.6"
     }
 }

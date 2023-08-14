@@ -1,6 +1,38 @@
 import { constants } from './common';
 
-const fs = require('fs');
+import fs from 'fs';
+
+export interface Config {
+    execute: boolean
+    log: {
+        enable: boolean
+        max_mbytes_per_file: number
+        max_file_count: number
+    }
+    version: string
+    unl: string[],
+    bin_path: string
+    bin_args: string
+    environment: Record<string, string>
+    max_input_ledger_offset: number
+    consensus: {
+        mode: "private" | "public"
+        roundtime: number
+        stage_slice: number
+        threshold: number
+    }
+    npl: {
+       mode: "private" | "public"
+    }
+    round_limits: {
+        user_input_bytes: number
+        user_output_bytes: number
+        npl_output_bytes: number
+        proc_cpu_seconds: number
+        proc_mem_bytes: number
+        proc_ofd_count: number
+    }
+}
 
 // Handles patch config manipulation.
 export class PatchConfig {
@@ -11,27 +43,27 @@ export class PatchConfig {
             throw "Patch config file does not exist.";
 
         return new Promise((resolve, reject) => {
-            fs.readFile(constants.PATCH_CONFIG_PATH, 'utf8', function (err, data) {
+            fs.readFile(constants.PATCH_CONFIG_PATH, 'utf8', function (err: any, data: string) {
                 if (err) reject(err);
                 else resolve(JSON.parse(data));
             });
         });
     }
 
-    updateConfig(config) {
+  updateConfig(config: Config) {
 
         this.validateConfig(config);
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             // Format json to match with the patch.cfg json format created by HP at the startup.
-            fs.writeFile(constants.PATCH_CONFIG_PATH, JSON.stringify(config, null, 4), (err) => {
+            fs.writeFile(constants.PATCH_CONFIG_PATH, JSON.stringify(config, null, 4), (err: any) => {
                 if (err) reject(err);
                 else resolve();
             });
         });
     }
 
-    validateConfig(config) {
+    validateConfig(config: Config) {
         // Validate all config fields.
         if (!config.version)
             throw "Contract version is not specified.";

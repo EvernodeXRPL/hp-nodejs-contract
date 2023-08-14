@@ -5,15 +5,16 @@ import { NplChannel } from './npl';
 import { UnlCollection } from './unl';
 import { UsersCollection } from './user';
 
-const fs = require('fs');
-const tty = require('tty');
+import fs from 'fs';
+import tty from 'tty';
 
 export class HotPocketContract {
 
-    #controlChannel = null;
-    #clientProtocol = null;
+    #controlChannel: ControlChannel | null = null;
+    /// @ts-ignore
+    #clientProtocol: typeof clientProtocols[keyof typeof clientProtocols]
 
-    init(contractFunc, clientProtocol = clientProtocols.json) {
+    init(contractFunc: any, clientProtocol = clientProtocols.json) {
 
         return new Promise(resolve => {
             if (this.#controlChannel) { // Already initialized.
@@ -40,14 +41,14 @@ export class HotPocketContract {
         });
     }
 
-    #executeContract(hpargs, contractFunc) {
+    #executeContract(hpargs: any, contractFunc: any) {
         // Keeps track of all the tasks (promises) that must be awaited before the termination.
-        const pendingTasks = [];
+        const pendingTasks: any[] = [];
         const nplChannel = new NplChannel(hpargs.npl_fd);
 
         const users = new UsersCollection(hpargs.user_in_fd, hpargs.users, this.#clientProtocol);
         const unl = new UnlCollection(hpargs.readonly, hpargs.unl, nplChannel, pendingTasks);
-        const executionContext = new ContractContext(hpargs, users, unl, this.#controlChannel);
+        const executionContext = new ContractContext(hpargs, users, unl, this.#controlChannel!);
 
         invokeCallback(contractFunc, executionContext).catch(errHandler).finally(() => {
             // Wait for any pending tasks added during execution.
@@ -59,7 +60,7 @@ export class HotPocketContract {
     }
 
     #terminate() {
-        this.#controlChannel.send({ type: controlMessages.contractEnd });
-        this.#controlChannel.close();
+        this.#controlChannel!.send({ type: controlMessages.contractEnd });
+        this.#controlChannel!.close();
     }
 }
