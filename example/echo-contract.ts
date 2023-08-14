@@ -1,9 +1,8 @@
 import HotPocket from "../dist";
-import { ContractContext } from "../dist/contract-context";
 
 // HotPocket smart contract is defined as a function which takes HotPocket Contract Context as an argument.
 // HotPocket considers execution as complete, when this function completes and all the NPL message callbacks are complete.
-const echoContract = async (ctx: ContractContext) => {
+const echoContract = async (ctx: HotPocket.ContractContext) => {
 
     // Collection of per-user promises to wait for. Each promise completes when inputs for that user is processed.
     const userHandlers: any[] = [];
