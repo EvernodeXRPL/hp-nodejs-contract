@@ -59,7 +59,6 @@ export class HotPocketContract {
     }
 
     #terminate() {
-        this.#controlChannel.send({ type: controlMessages.contractEnd });
         this.#controlChannel.close();
     }
 }

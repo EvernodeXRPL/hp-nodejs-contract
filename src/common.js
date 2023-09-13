@@ -1,7 +1,6 @@
 const fs = require('fs');
 
 export const controlMessages = {
-    contractEnd: "contract_end",
     peerChangeset: "peer_changeset"
 }
 Object.freeze(controlMessages);
