@@ -60,5 +60,6 @@ export class HotPocketContract {
 
     #terminate() {
         this.#controlChannel.close();
+        process.exit(0);
     }
 }
