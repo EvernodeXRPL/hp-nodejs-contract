@@ -14,12 +14,12 @@ export class ContractContext {
         this.contractId = hpargs.contract_id;
         this.publicKey = hpargs.public_key;
         this.privateKey = hpargs.private_key;
-        this.readonly = hpargs.readonly;
+        this.mode = hpargs.mode;
         this.timestamp = hpargs.timestamp;
         this.users = users;
-        this.unl = unl; // Not available in readonly mode.
-        this.lclSeqNo = hpargs.lcl_seq_no; // Not available in readonly mode.
-        this.lclHash = hpargs.lcl_hash; // Not available in readonly mode.
+        this.unl = unl; // Not available in read request mode.
+        this.lclSeqNo = hpargs.lcl_seq_no; // Not available in read request mode.
+        this.lclHash = hpargs.lcl_hash; // Not available in read request mode.
     }
 
     // Returns the config values in patch config.
