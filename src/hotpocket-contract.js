@@ -49,22 +49,7 @@ export class HotPocketContract {
         const unl = new UnlCollection(hpargs.mode === executionModes.READ_REQUEST, hpargs.unl, nplChannel, pendingTasks);
         const executionContext = new ContractContext(hpargs, users, unl, this.#controlChannel);
 
-        let func = null;
-
-        switch (executionContext.mode) {
-            case executionModes.CONSENSUS:
-                func = contractHandlers.consensus;
-                break;
-            case executionModes.FALLBACK:
-                func = contractHandlers.fallback;
-                break;
-            case executionModes.READ_REQUEST:
-                func = contractHandlers.readRequest;
-                break;
-            default:
-                break;
-        }
-
+        const func = contractHandlers[executionContext.mode];
         if (func) {
             invokeCallback(func, executionContext).catch(errHandler).finally(() => {
                 // Wait for any pending tasks added during execution.

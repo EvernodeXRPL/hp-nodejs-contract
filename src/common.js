@@ -19,9 +19,9 @@ export const constants = {
 Object.freeze(constants);
 
 export const executionModes = {
-    CONSENSUS: 0,
-    FALLBACK: 1,
-    READ_REQUEST: 2
+    CONSENSUS: "consensus",
+    FALLBACK: "consensus_fallback",
+    READ_REQUEST: "read_req"
 }
 Object.freeze(executionModes);
 
