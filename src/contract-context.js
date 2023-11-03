@@ -20,6 +20,7 @@ export class ContractContext {
         this.unl = unl; // Not available in read request mode.
         this.lclSeqNo = hpargs.lcl_seq_no; // Not available in read request mode.
         this.lclHash = hpargs.lcl_hash; // Not available in read request mode.
+        this.nonConsensusRounds = hpargs.non_consensus_rounds; // Only available in fallback mode.
     }
 
     // Returns the config values in patch config.
