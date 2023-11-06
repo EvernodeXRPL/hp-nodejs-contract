@@ -18,6 +18,13 @@ export const constants = {
 }
 Object.freeze(constants);
 
+export const executionModes = {
+    CONSENSUS: "consensus",
+    CONSENSUS_FALLBACK: "consensus_fallback",
+    READ_REQUEST: "read_req"
+}
+Object.freeze(executionModes);
+
 export function writeAsync(fd, buf) {
     return new Promise(resolve => fs.write(fd, buf, resolve));
 }

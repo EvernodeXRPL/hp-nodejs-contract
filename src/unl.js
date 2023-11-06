@@ -13,7 +13,7 @@ export class UnlCollection {
 
         if (!readonly) {
             for (const [publicKey, stat] of Object.entries(unl)) {
-                this.nodes[publicKey] = new UnlNode(publicKey, stat.active_on);
+                this.nodes[publicKey] = new UnlNode(publicKey, stat.active_on, stat.lcl_seq_no, stat.lcl_hash );
             }
 
             this.#channel = channel;
@@ -57,8 +57,10 @@ export class UnlCollection {
 // Represents a node that's part of unl.
 export class UnlNode {
 
-    constructor(publicKey, activeOn) {
+    constructor(publicKey, activeOn, lclSeqNo, lclHash) {
         this.publicKey = publicKey;
         this.activeOn = activeOn;
+        this.lclSeqNo = lclSeqNo;
+        this.lclHash = lclHash;
     }
 }

@@ -1,4 +1,4 @@
-import { clientProtocols, controlMessages, errHandler, invokeCallback } from './common';
+import { clientProtocols, errHandler, executionModes, invokeCallback } from './common';
 import { ContractContext } from './contract-context';
 import { ControlChannel } from './control';
 import { NplChannel } from './npl';
@@ -13,7 +13,7 @@ export class HotPocketContract {
     #controlChannel = null;
     #clientProtocol = null;
 
-    init(contractFunc, clientProtocol = clientProtocols.json) {
+    init(contractHandlers, clientProtocol = clientProtocols.json) {
 
         return new Promise(resolve => {
             if (this.#controlChannel) { // Already initialized.
@@ -34,28 +34,35 @@ export class HotPocketContract {
             fs.readFile(process.stdin.fd, 'utf8', (err, argsJson) => {
                 const hpargs = JSON.parse(argsJson);
                 this.#controlChannel = new ControlChannel(hpargs.control_fd);
-                this.#executeContract(hpargs, contractFunc);
+                this.#executeContract(hpargs, contractHandlers);
                 resolve(true);
             });
         });
     }
 
-    #executeContract(hpargs, contractFunc) {
+    #executeContract(hpargs, contractHandlers) {
         // Keeps track of all the tasks (promises) that must be awaited before the termination.
         const pendingTasks = [];
         const nplChannel = new NplChannel(hpargs.npl_fd);
 
         const users = new UsersCollection(hpargs.user_in_fd, hpargs.users, this.#clientProtocol);
-        const unl = new UnlCollection(hpargs.readonly, hpargs.unl, nplChannel, pendingTasks);
+        const unl = new UnlCollection(hpargs.mode === executionModes.READ_REQUEST, hpargs.unl, nplChannel, pendingTasks);
         const executionContext = new ContractContext(hpargs, users, unl, this.#controlChannel);
 
-        invokeCallback(contractFunc, executionContext).catch(errHandler).finally(() => {
-            // Wait for any pending tasks added during execution.
-            Promise.all(pendingTasks).catch(errHandler).finally(() => {
-                nplChannel.close();
-                this.#terminate();
+        const func = contractHandlers[executionContext.mode];
+        if (func) {
+            invokeCallback(func, executionContext).catch(errHandler).finally(() => {
+                // Wait for any pending tasks added during execution.
+                Promise.all(pendingTasks).catch(errHandler).finally(() => {
+                    nplChannel.close();
+                    this.#terminate();
+                });
             });
-        });
+        }
+        else {
+            nplChannel.close();
+            this.#terminate();
+        }
     }
 
     #terminate() {

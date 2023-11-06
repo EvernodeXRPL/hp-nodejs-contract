@@ -1,8 +1,20 @@
 const HotPocket = require("hotpocket-nodejs-contract");
+const fs = require('fs');
 
-// HotPocket smart contract is defined as a function which takes HotPocket Contract Context as an argument.
-// HotPocket considers execution as complete, when this function completes and all the NPL message callbacks are complete.
-const echoContract = async (ctx) => {
+const exectsFile = "exects.txt";
+
+// HP smart contract is defined as a function which takes HP ExecutionContext as an argument.
+// HP considers execution as complete, when this function completes and all the NPL message callbacks are complete.
+const contract = async (ctx, readonly = false) => {
+
+    // We just save execution timestamp as an example state file change.
+    if (!readonly) {
+        fs.appendFileSync(exectsFile, "ts:" + ctx.timestamp + "\n");
+
+        const stats = fs.statSync(exectsFile);
+        if (stats.size > 100 * 1024 * 1024) // If more than 100 MB, empty the file.
+            fs.truncateSync(exectsFile);
+    }
 
     // Collection of per-user promises to wait for. Each promise completes when inputs for that user is processed.
     const userHandlers = [];
@@ -44,11 +56,26 @@ const echoContract = async (ctx) => {
     // ctx.unl.find("<public key hex>");
 
     // NPL messages example.
-    // if (!ctx.readonly) {
-    //     ctx.unl.onMessage((node, msg) => { // msg is a Buffer
-    //         console.log(msg.toString() + " from " + node.publicKey);
-    //     })
+    // if (!readonly) {
+    //     // Start listening to incoming NPL messages before we send ours.
+    //     const promise = new Promise((resolve, reject) => {
+    //         let timeout = setTimeout(() => {
+    //             reject('NPL timeout.');
+    //         }, 2000);
+
+    //         let list = [];
+    //         ctx.unl.onMessage((node, msg) => {
+    //             console.log(`${node.publicKey} said ${msg} to me.`);
+    //             list.push(msg);
+    //             if (list.length == ctx.unl.list().length) {
+    //                 clearTimeout(timeout);
+    //                 resolve();
+    //             }
+    //         });
+    //     });
+
     //     await ctx.unl.send("Hello");
+    //     await promise;
     // }
 
     // Update patch config
@@ -57,5 +84,33 @@ const echoContract = async (ctx) => {
     // await ctx.updateConfig(config);
 }
 
+const fallback = async (ctx) => {
+    console.log(`Fallback mode: Non consensus execution count: ${ctx.nonConsensusRounds}`);
+    // NPL messages example.
+    // Start listening to incoming NPL messages before we send ours.
+    const promise = new Promise((resolve, reject) => {
+        let timeout = setTimeout(() => {
+            reject('NPL timeout.');
+        }, 2000);
+
+        let list = [];
+        ctx.unl.onMessage((node, msg) => {
+            console.log(`${node.publicKey} said ${msg} to me.`);
+            list.push(msg);
+            if (list.length == ctx.unl.list().length) {
+                clearTimeout(timeout);
+                resolve();
+            }
+        });
+    });
+
+    await ctx.unl.send("Hello");
+    await promise;
+}
+
 const hpc = new HotPocket.Contract();
-hpc.init(echoContract);
+hpc.init({
+    "consensus": async (ctx) => { await contract(ctx, false); },
+    "consensus_fallback": async (ctx) => { await fallback(ctx); },
+    "read_req": async (ctx) => { await contract(ctx, true); }
+});
