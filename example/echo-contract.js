@@ -85,6 +85,7 @@ const contract = async (ctx, readonly = false) => {
 }
 
 const fallback = async (ctx) => {
+    console.log(`Fallback mode: Non consensus execution count: ${ctx.nonConsensusRounds}`);
     // NPL messages example.
     // Start listening to incoming NPL messages before we send ours.
     const promise = new Promise((resolve, reject) => {
