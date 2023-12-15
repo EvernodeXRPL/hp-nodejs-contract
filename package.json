@@ -5,10 +5,10 @@
         "HotPocket"
     ],
     "homepage": "https://github.com/HotPocketDev/hp-nodejs-contract",
-    "license": "MIT",
-    "version": "0.7.0",
+    "license": "SEE LICENSE IN https://raw.githubusercontent.com/EvernodeXRPL/evernode-resources/main/license/evernode-license.pdf",
+    "version": "0.7.1",
     "scripts": {
-        "build": "ncc build src/index.js --target es2021 -o dist && ./clean-pkg.sh",
+        "build": "ncc build src/index.js --target es2021 -o dist && ./clean-pkg.sh && cp evernode-license.pdf dist/",
         "publish": "npm run build && cp npm-readme.md dist/README.md && npm publish ./dist"
     }
 }
