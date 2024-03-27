@@ -12,8 +12,9 @@ export class HotPocketContract {
 
     #controlChannel = null;
     #clientProtocol = null;
+    #forceTerminate = false;
 
-    init(contractHandlers, clientProtocol = clientProtocols.json) {
+    init(contractHandlers, clientProtocol = clientProtocols.json, forceTerminate = false) {
 
         return new Promise(resolve => {
             if (this.#controlChannel) { // Already initialized.
@@ -29,6 +30,8 @@ export class HotPocketContract {
                 resolve(false);
                 return;
             }
+
+            this.#forceTerminate = forceTerminate;
 
             // Parse HotPocket args.
             fs.readFile(process.stdin.fd, 'utf8', (err, argsJson) => {
@@ -67,6 +70,7 @@ export class HotPocketContract {
 
     #terminate() {
         this.#controlChannel.close();
-        process.kill(process.pid, 'SIGINT');
+        if (this.#forceTerminate)
+            process.kill(process.pid, 'SIGINT');
     }
 }
